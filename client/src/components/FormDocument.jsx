@@ -1,3 +1,5 @@
+import { useSettings } from '../lib/settings.js';
+
 const PROGRAMS = ['Beginner', 'Intermediate', 'Advanced', 'Competitive'];
 const AGE_GROUPS = ['6+ Years', 'Youth', 'Adult', 'All Levels'];
 const BATCHES = [
@@ -30,6 +32,7 @@ function Item({ label, value, full }) {
 
 export default function FormDocument({ data }) {
   const d = data || {};
+  const s = useSettings();
 
   return (
     <div className="formdoc" id="formdoc">
@@ -37,15 +40,15 @@ export default function FormDocument({ data }) {
         <div className="fd-head">
           <div className="fd-logo">
             <span className="aim">⌖</span>
-            Triumph Archery Academy
-            <span style={{ fontSize: 6, marginTop: 4 }}>Aim · Focus · Triumph</span>
+            {s.academyName}
+            <span style={{ fontSize: 6, marginTop: 4 }}>{s.motto}</span>
           </div>
 
           <div className="fd-title">
-            <div className="name">TRIUMPH ARCHERY ACADEMY</div>
-            <div className="motto">Aim · Focus · Triumph</div>
+            <div className="name">{s.academyName}</div>
+            <div className="motto">{s.motto}</div>
             <div className="hr" />
-            <div className="form-name">ADMISSION FORM</div>
+            <div className="form-name">{s.formTitle}</div>
             <div
               style={{
                 fontFamily: 'Segoe UI, Arial, sans-serif',
@@ -144,11 +147,7 @@ export default function FormDocument({ data }) {
         </div>
         <div className="fd-decl">
           <i className={'fd-box' + (d.declarationAgreed ? ' on' : '')} style={{ marginTop: 3 }} />
-          <span>
-            I hereby declare that the information provided above is true and accurate to the best of my
-            knowledge. I agree to follow the Academy rules, safety protocols, and all policies of Triumph
-            Archery Academy.
-          </span>
+          <span>{s.declarationText}</span>
         </div>
 
         <div className="fd-sigs">
@@ -181,10 +180,7 @@ export default function FormDocument({ data }) {
         </div>
       </div>
 
-      <div className="fd-foot">
-        <b>CONTACT US</b> · Phone: 9600019334 &amp; 9094070501 · Location: Parvathi Nagar, Old
-        Perungalathur
-      </div>
+      <div className="fd-foot">{s.footer}</div>
     </div>
   );
 }

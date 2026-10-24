@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api.js';
 import FormDocument from '../components/FormDocument.jsx';
 import { generateFormPdf, pdfToBase64 } from '../lib/pdf.js';
+import { useSettings } from '../lib/settings.js';
 
 const EMPTY = {
   archerName: '',
@@ -43,6 +44,7 @@ function Field({ label, full, children }) {
 
 export default function NewAdmission() {
   const nav = useNavigate();
+  const settings = useSettings();
   const [form, setForm] = useState(EMPTY);
   const [saved, setSaved] = useState(null);
   const [preview, setPreview] = useState(false);
@@ -329,9 +331,7 @@ export default function NewAdmission() {
             checked={form.declarationAgreed}
             onChange={set('declarationAgreed')}
           />
-          I hereby declare that the information provided above is true and accurate to the best of my
-          knowledge. I agree to follow the Academy rules, safety protocols, and all policies of Triumph
-          Archery Academy.
+          {settings.declarationText}
         </label>
 
         <div className="form-grid">

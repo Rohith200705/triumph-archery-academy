@@ -27,6 +27,14 @@ export default function Layout({ user, onLogout, children }) {
         >
           <span>☰</span> Admission Reports
         </NavLink>
+        {user?.role === 'admin' && (
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+          >
+            <span>✎</span> Form Content
+          </NavLink>
+        )}
 
         <div className="sidebar-foot">
           <div className="who">{user?.name || 'Official'}</div>

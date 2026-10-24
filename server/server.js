@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import admissionRoutes from './routes/admissions.js';
+import settingsRoutes from './routes/settings.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/api/health', (req, res) =>
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admissions', admissionRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

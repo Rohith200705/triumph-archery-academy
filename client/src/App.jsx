@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import NewAdmission from './pages/NewAdmission.jsx';
 import Reports from './pages/Reports.jsx';
 import AdmissionDetail from './pages/AdmissionDetail.jsx';
+import Settings from './pages/Settings.jsx';
 
 export default function App() {
   const [user, setUser] = useState(() => (getToken() ? getStoredUser() : null));
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/new" element={<NewAdmission />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/reports/:id" element={<AdmissionDetail />} />
+        <Route path="/settings" element={<Settings user={user} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
