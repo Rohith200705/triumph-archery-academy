@@ -7,6 +7,7 @@ const admissionSchema = new mongoose.Schema(
     archerName: { type: String, required: true, trim: true },
     dob: { type: String, default: '' },
     gender: { type: String, enum: ['', 'Male', 'Female', 'Other'], default: '' },
+    photo: { type: String, default: '' },
 
     parentName: { type: String, default: '', trim: true },
     contactNumber: { type: String, required: true, trim: true },

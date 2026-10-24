@@ -4,11 +4,13 @@ import { api } from '../api.js';
 import FormDocument from '../components/FormDocument.jsx';
 import { generateFormPdf, pdfToBase64 } from '../lib/pdf.js';
 import { useSettings } from '../lib/settings.js';
+import PhotoCapture from '../components/PhotoCapture.jsx';
 
 const EMPTY = {
   archerName: '',
   dob: '',
   gender: '',
+  photo: '',
   parentName: '',
   contactNumber: '',
   alternateContact: '',
@@ -160,6 +162,10 @@ export default function NewAdmission() {
         </div>
 
         <div className="form-grid">
+          <div className="field full">
+            <label>Photo</label>
+            <PhotoCapture value={form.photo} onChange={(url) => setVal('photo', url)} />
+          </div>
           <div className="field">
             <label>Archer Name</label>
             <input value={form.archerName} onChange={set('archerName')} placeholder="Full name" />

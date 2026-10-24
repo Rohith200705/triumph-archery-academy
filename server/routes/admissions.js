@@ -103,6 +103,7 @@ router.get('/', async (req, res) => {
 
     const [items, total] = await Promise.all([
       Admission.find(q)
+        .select('-photo')
         .sort(sort)
         .skip((pageNum - 1) * limitNum)
         .limit(limitNum)
@@ -136,7 +137,7 @@ router.get('/stats', async (req, res) => {
         { $group: { _id: '$ageGroup', count: { $sum: 1 } } },
         { $sort: { count: -1 } }
       ]),
-      Admission.find().sort('-createdAt').limit(6).lean()
+      Admission.find().select('-photo').sort('-createdAt').limit(6).lean()
     ]);
 
     res.json({ total, sent, pending: total - sent, thisMonth, byProgram, byBatch, byAgeGroup, recent });

@@ -62,7 +62,9 @@ export default function FormDocument({ data }) {
             </div>
           </div>
 
-          <div className="fd-photo" />
+          <div className="fd-photo">
+            {d.photo ? <img src={d.photo} alt="Archer" /> : null}
+          </div>
         </div>
 
         <div className="fd-section">

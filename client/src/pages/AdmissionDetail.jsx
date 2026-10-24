@@ -136,6 +136,25 @@ export default function AdmissionDetail() {
           <span className="rule" />
         </div>
         <div className="detail-grid">
+          {adm.photo && (
+            <div className="detail-item">
+              <div className="k">Photo</div>
+              <div className="v">
+                <img
+                  src={adm.photo}
+                  alt={adm.archerName}
+                  style={{
+                    width: 96,
+                    height: 120,
+                    objectFit: 'cover',
+                    border: '2px solid #c9a227',
+                    borderRadius: 4,
+                    display: 'block'
+                  }}
+                />
+              </div>
+            </div>
+          )}
           <Item k="Archer Name" v={adm.archerName} />
           <Item k="Age / Date of Birth" v={adm.dob} />
           <Item k="Gender" v={adm.gender} />
