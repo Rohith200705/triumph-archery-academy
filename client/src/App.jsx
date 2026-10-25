@@ -36,8 +36,10 @@ export default function App() {
   if (!isStaff) {
     return (
       <Routes location={location}>
-        <Route path="/ward" element={<Ward />} />
-        <Route path="/" element={<Navigate to="/ward" replace />} />
+        <Route path="/ward" element={<Ward onLogout={logout} />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Navigate to="/ward" replace />} />
+        <Route path="/register" element={<Navigate to="/ward" replace />} />
         <Route path="*" element={<Navigate to="/ward" replace />} />
       </Routes>
     );

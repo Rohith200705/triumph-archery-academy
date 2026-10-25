@@ -49,7 +49,7 @@ function ProgressionChart({ sessions }) {
   );
 }
 
-export default function Ward() {
+export default function Ward({ onLogout }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
 
@@ -78,6 +78,7 @@ export default function Ward() {
         </div>
         <nav>
           <Link to="/" className="btn ghost sm">Home</Link>
+          <button className="btn gold sm" onClick={onLogout}>Log out</button>
         </nav>
       </header>
 
