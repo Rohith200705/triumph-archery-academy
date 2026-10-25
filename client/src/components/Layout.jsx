@@ -12,7 +12,7 @@ export default function Layout({ user, onLogout, children }) {
           </div>
         </div>
 
-        <NavLink to="/" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')} end>
+        <NavLink to="/dashboard" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')} end>
           <span>▦</span> Dashboard
         </NavLink>
         <NavLink

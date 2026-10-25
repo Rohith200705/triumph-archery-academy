@@ -5,6 +5,9 @@ import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import admissionRoutes from './routes/admissions.js';
 import settingsRoutes from './routes/settings.js';
+import registrationRoutes from './routes/registration.js';
+import wardRoutes from './routes/ward.js';
+import { requireAuth } from './middleware/auth.js';
 
 const app = express();
 
@@ -22,8 +25,10 @@ app.get('/api/health', (req, res) =>
 );
 
 app.use('/api/auth', authRoutes);
+app.use('/api/registrations', registrationRoutes);
 app.use('/api/admissions', admissionRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/ward', requireAuth, wardRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

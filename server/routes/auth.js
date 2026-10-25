@@ -13,7 +13,14 @@ function signToken(user) {
 }
 
 function publicUser(user) {
-  return { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role };
+  return {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    role: user.role,
+    admissionId: user.admissionId || null
+  };
 }
 
 router.post('/register', async (req, res) => {
@@ -52,6 +59,12 @@ router.post('/login', async (req, res) => {
 
     const ok = await bcrypt.compare(String(password || ''), user.password);
     if (!ok) return res.status(401).json({ message: 'Invalid email or password' });
+
+    if (user.active === false) {
+      return res.status(403).json({
+        message: 'This account has been deactivated. Please contact Triumph Archery Academy.'
+      });
+    }
 
     res.json({ token: signToken(user), user: publicUser(user) });
   } catch (err) {

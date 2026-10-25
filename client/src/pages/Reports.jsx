@@ -10,6 +10,7 @@ const BLANK = {
   gender: '',
   previousExperience: '',
   status: '',
+  approval: '',
   dateFrom: '',
   dateTo: ''
 };
@@ -83,7 +84,7 @@ export default function Reports() {
             <label>Age Group</label>
             <select value={filters.ageGroup} onChange={set('ageGroup')}>
               <option value="">All</option>
-              {['6+ Years', 'Youth', 'Adult', 'All Levels'].map((v) => (
+              {['Kid (6-12 years)', 'Youth (12-18 years)', 'Adult (18+ years)', 'Under 6'].map((v) => (
                 <option key={v}>{v}</option>
               ))}
             </select>
@@ -92,14 +93,7 @@ export default function Reports() {
             <label>Weekend Batch</label>
             <select value={filters.weekendBatch} onChange={set('weekendBatch')}>
               <option value="">All</option>
-              {[
-                'Saturday Morning',
-                'Saturday Evening',
-                'Sunday Morning',
-                'Sunday Evening',
-                'Both Weekends',
-                'Flexible'
-              ].map((v) => (
+              {['Morning (Friday, Saturday, Sunday)', 'Evening (Friday, Saturday, Sunday)'].map((v) => (
                 <option key={v}>{v}</option>
               ))}
             </select>
@@ -127,6 +121,15 @@ export default function Reports() {
               <option value="">All</option>
               <option>Submitted</option>
               <option>Sent to WhatsApp</option>
+            </select>
+          </div>
+          <div className="field">
+            <label>Approval</label>
+            <select value={filters.approval} onChange={set('approval')}>
+              <option value="">All</option>
+              <option>Pending</option>
+              <option>Approved</option>
+              <option>Rejected</option>
             </select>
           </div>
           <div className="field">
@@ -194,6 +197,20 @@ export default function Reports() {
                     <td>
                       <span className={'badge ' + (r.status === 'Sent to WhatsApp' ? 'green' : 'amber')}>
                         {r.status}
+                      </span>
+                      <br />
+                      <span
+                        className={
+                          'badge ' +
+                          (r.approvalStatus === 'Approved'
+                            ? 'green'
+                            : r.approvalStatus === 'Rejected'
+                            ? 'maroon'
+                            : 'amber')
+                        }
+                        style={{ marginTop: 4 }}
+                      >
+                        {r.approvalStatus || 'Pending'}
                       </span>
                     </td>
                     <td style={{ whiteSpace: 'nowrap' }}>

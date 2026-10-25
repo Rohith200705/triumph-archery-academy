@@ -56,13 +56,13 @@ export default function Dashboard() {
           <div className="label">Total Admissions</div>
           <div className="value">{stats.total}</div>
         </div>
+        <div className="stat amber">
+          <div className="label">Pending Approval</div>
+          <div className="value">{stats.pendingApproval}</div>
+        </div>
         <div className="stat green">
           <div className="label">Sent to WhatsApp</div>
           <div className="value">{stats.sent}</div>
-        </div>
-        <div className="stat amber">
-          <div className="label">Pending Send</div>
-          <div className="value">{stats.pending}</div>
         </div>
         <div className="stat gold">
           <div className="label">This Month</div>

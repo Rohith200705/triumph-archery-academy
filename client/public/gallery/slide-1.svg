@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4d0c17"/>
+      <stop offset="1" stop-color="#8a1a2c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g transform="translate(800 420)">
+    <circle r="260" fill="#fdf9f0"/>
+    <circle r="210" fill="#b3261e"/>
+    <circle r="160" fill="#fdf9f0"/>
+    <circle r="110" fill="#b3261e"/>
+    <circle r="60" fill="#c9a227"/>
+    <circle r="22" fill="#4d0c17"/>
+  </g>
+  <g stroke="#c9a227" stroke-width="8" stroke-linecap="round">
+    <line x1="1080" y1="200" x2="820" y2="415"/>
+    <line x1="1105" y1="230" x2="825" y2="430"/>
+  </g>
+  <polygon points="1080,200 1120,185 1105,230" fill="#e7d9a8"/>
+  <text x="800" y="790" text-anchor="middle" font-family="Georgia, serif" font-size="64" fill="#e7d9a8" letter-spacing="8">AIM · FOCUS · TRIUMPH</text>
+  <text x="800" y="850" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#fdf9f0" opacity="0.85">Triumph Archery Academy</text>
+</svg>

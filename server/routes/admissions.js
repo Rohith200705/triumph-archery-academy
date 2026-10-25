@@ -1,58 +1,13 @@
 import { Router } from 'express';
+import bcrypt from 'bcryptjs';
 import Admission from '../models/Admission.js';
-import { requireAuth } from '../middleware/auth.js';
+import Session from '../models/Session.js';
+import User from '../models/User.js';
+import { requireAuth, requireStaff } from '../middleware/auth.js';
 import { sendWhatsAppDocument, waMeLink } from './whatsapp.js';
 
 const router = Router();
-router.use(requireAuth);
-
-const ENUMS = {
-  program: ['', 'Beginner', 'Intermediate', 'Advanced', 'Competitive'],
-  ageGroup: ['', '6+ Years', 'Youth', 'Adult', 'All Levels'],
-  weekendBatch: [
-    '',
-    'Saturday Morning',
-    'Saturday Evening',
-    'Sunday Morning',
-    'Sunday Evening',
-    'Both Weekends',
-    'Flexible'
-  ],
-  gender: ['', 'Male', 'Female', 'Other'],
-  previousExperience: ['', 'Yes', 'No']
-};
-
-async function nextApplicationNo() {
-  const year = new Date().getFullYear();
-  const prefix = `TAA-${year}-`;
-  const last = await Admission.findOne({ applicationNo: new RegExp(`^${prefix}`) })
-    .sort({ applicationNo: -1 })
-    .select('applicationNo');
-  const seq = last ? parseInt(last.applicationNo.replace(prefix, ''), 10) + 1 : 1;
-  return `${prefix}${String(seq).padStart(4, '0')}`;
-}
-
-router.get('/meta', (req, res) => res.json(ENUMS));
-
-router.post('/', async (req, res) => {
-  try {
-    const body = req.body || {};
-    if (!body.archerName || !body.contactNumber) {
-      return res.status(400).json({ message: 'Archer name and contact number are required' });
-    }
-
-    const doc = await Admission.create({
-      ...body,
-      applicationNo: await nextApplicationNo(),
-      status: 'Submitted',
-      createdBy: req.user._id,
-      createdByName: req.user.name
-    });
-    res.status(201).json(doc);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+router.use(requireAuth, requireStaff);
 
 router.get('/', async (req, res) => {
   try {
@@ -64,6 +19,7 @@ router.get('/', async (req, res) => {
       gender = '',
       previousExperience = '',
       status = '',
+      approval = '',
       dateFrom = '',
       dateTo = '',
       page = 1,
@@ -88,6 +44,7 @@ router.get('/', async (req, res) => {
     if (gender) q.gender = gender;
     if (previousExperience) q.previousExperience = previousExperience;
     if (status) q.status = status;
+    if (approval) q.approvalStatus = approval;
     if (dateFrom || dateTo) {
       q.createdAt = {};
       if (dateFrom) q.createdAt.$gte = new Date(dateFrom);
@@ -119,9 +76,21 @@ router.get('/', async (req, res) => {
 
 router.get('/stats', async (req, res) => {
   try {
-    const [total, sent, thisMonth, byProgram, byBatch, byAgeGroup, recent] = await Promise.all([
+    const [
+      total,
+      sent,
+      pendingApproval,
+      rejected,
+      thisMonth,
+      byProgram,
+      byBatch,
+      byAgeGroup,
+      recent
+    ] = await Promise.all([
       Admission.countDocuments(),
       Admission.countDocuments({ status: 'Sent to WhatsApp' }),
+      Admission.countDocuments({ approvalStatus: 'Pending' }),
+      Admission.countDocuments({ approvalStatus: 'Rejected' }),
       Admission.countDocuments({
         createdAt: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) }
       }),
@@ -140,7 +109,18 @@ router.get('/stats', async (req, res) => {
       Admission.find().select('-photo').sort('-createdAt').limit(6).lean()
     ]);
 
-    res.json({ total, sent, pending: total - sent, thisMonth, byProgram, byBatch, byAgeGroup, recent });
+    res.json({
+      total,
+      sent,
+      pending: total - sent,
+      pendingApproval,
+      rejected,
+      thisMonth,
+      byProgram,
+      byBatch,
+      byAgeGroup,
+      recent
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -155,6 +135,37 @@ router.get('/:id', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
+router.post('/', async (req, res) => {
+  try {
+    const body = req.body || {};
+    if (!body.archerName || !body.contactNumber) {
+      return res.status(400).json({ message: 'Archer name and contact number are required' });
+    }
+
+    const doc = await Admission.create({
+      ...body,
+      applicationNo: await nextApplicationNo(),
+      status: 'Submitted',
+      approvalStatus: body.approvalStatus || 'Approved',
+      createdBy: req.user._id,
+      createdByName: req.user.name
+    });
+    res.status(201).json(doc);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+async function nextApplicationNo() {
+  const year = new Date().getFullYear();
+  const prefix = `TAA-${year}-`;
+  const last = await Admission.findOne({ applicationNo: new RegExp(`^${prefix}`) })
+    .sort({ applicationNo: -1 })
+    .select('applicationNo');
+  const seq = last ? parseInt(last.applicationNo.replace(prefix, ''), 10) + 1 : 1;
+  return `${prefix}${String(seq).padStart(4, '0')}`;
+}
 
 router.put('/:id', async (req, res) => {
   try {
@@ -173,7 +184,136 @@ router.delete('/:id', async (req, res) => {
   try {
     const doc = await Admission.findByIdAndDelete(req.params.id);
     if (!doc) return res.status(404).json({ message: 'Admission not found' });
+    await Promise.all([
+      Session.deleteMany({ admission: doc._id }),
+      User.deleteMany({ admissionId: doc._id, role: 'parent' })
+    ]);
     res.json({ message: 'Admission deleted' });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.post('/:id/approve', async (req, res) => {
+  try {
+    const doc = await Admission.findById(req.params.id);
+    if (!doc) return res.status(404).json({ message: 'Admission not found' });
+
+    doc.approvalStatus = 'Approved';
+    doc.approvalNote = req.body?.note || '';
+    doc.approvedAt = new Date();
+    doc.approvedByName = req.user.name;
+    await doc.save();
+
+    await User.updateMany({ admissionId: doc._id, role: 'parent' }, { active: true });
+
+    res.json(doc);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.post('/:id/reject', async (req, res) => {
+  try {
+    const doc = await Admission.findById(req.params.id);
+    if (!doc) return res.status(404).json({ message: 'Admission not found' });
+
+    doc.approvalStatus = 'Rejected';
+    doc.approvalNote = req.body?.note || '';
+    doc.approvedAt = new Date();
+    doc.approvedByName = req.user.name;
+    await doc.save();
+
+    await User.updateMany({ admissionId: doc._id, role: 'parent' }, { active: false });
+
+    res.json(doc);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.post('/:id/parent-account', async (req, res) => {
+  try {
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) return res.status(404).json({ message: 'Admission not found' });
+
+    const { email, password, name } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+    if (String(password).length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const normalizedEmail = String(email).toLowerCase().trim();
+    const existing = await User.findOne({ email: normalizedEmail });
+    if (existing) {
+      return res.status(409).json({ message: 'This email already has an account' });
+    }
+
+    const user = await User.create({
+      name: name || `${admission.archerName} (Guardian)`,
+      email: normalizedEmail,
+      phone: admission.contactNumber,
+      password: await bcrypt.hash(String(password), 10),
+      role: 'parent',
+      active: admission.approvalStatus !== 'Rejected',
+      admissionId: admission._id
+    });
+
+    res.status(201).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      active: user.active
+    });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.get('/:id/sessions', async (req, res) => {
+  try {
+    const sessions = await Session.find({ admission: req.params.id }).sort({ date: -1 }).lean();
+    res.json(sessions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.post('/:id/sessions', async (req, res) => {
+  try {
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) return res.status(404).json({ message: 'Admission not found' });
+
+    const { date, topic, attended, score, notes } = req.body || {};
+    if (!date) return res.status(400).json({ message: 'Date is required' });
+
+    const session = await Session.create({
+      admission: admission._id,
+      date: new Date(date),
+      topic: topic || '',
+      attended: attended !== false,
+      score: score === '' || score === null || score === undefined ? null : Number(score),
+      notes: notes || '',
+      createdBy: req.user._id,
+      createdByName: req.user.name
+    });
+    res.status(201).json(session);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.delete('/:id/sessions/:sessionId', async (req, res) => {
+  try {
+    const session = await Session.findOneAndDelete({
+      _id: req.params.sessionId,
+      admission: req.params.id
+    });
+    if (!session) return res.status(404).json({ message: 'Session not found' });
+    res.json({ message: 'Session deleted' });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

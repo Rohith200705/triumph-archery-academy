@@ -30,15 +30,8 @@ const EMPTY = {
 };
 
 const PROGRAMS = ['Beginner', 'Intermediate', 'Advanced', 'Competitive'];
-const AGE_GROUPS = ['6+ Years', 'Youth', 'Adult', 'All Levels'];
-const BATCHES = [
-  'Saturday Morning',
-  'Saturday Evening',
-  'Sunday Morning',
-  'Sunday Evening',
-  'Both Weekends',
-  'Flexible'
-];
+const AGE_GROUPS = ['Kid (6-12 years)', 'Youth (12-18 years)', 'Adult (18+ years)', 'Under 6'];
+const BATCHES = ['Morning (Friday, Saturday, Sunday)', 'Evening (Friday, Saturday, Sunday)'];
 
 function Field({ label, full, children }) {
   return <div className={'field' + (full ? ' full' : '')}>{children || <label>{label}</label>}</div>;

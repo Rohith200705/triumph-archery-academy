@@ -1,15 +1,8 @@
 import { useSettings } from '../lib/settings.js';
 
 const PROGRAMS = ['Beginner', 'Intermediate', 'Advanced', 'Competitive'];
-const AGE_GROUPS = ['6+ Years', 'Youth', 'Adult', 'All Levels'];
-const BATCHES = [
-  'Saturday Morning',
-  'Saturday Evening',
-  'Sunday Morning',
-  'Sunday Evening',
-  'Both Weekends',
-  'Flexible'
-];
+const AGE_GROUPS = ['Kid (6-12 years)', 'Youth (12-18 years)', 'Adult (18+ years)', 'Under 6'];
+const BATCHES = ['Morning (Friday, Saturday, Sunday)', 'Evening (Friday, Saturday, Sunday)'];
 const GENDERS = ['Male', 'Female', 'Other'];
 
 function Check({ on, label }) {

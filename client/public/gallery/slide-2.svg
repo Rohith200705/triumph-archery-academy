@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b2118"/>
+      <stop offset="1" stop-color="#6d1220"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g opacity="0.9">
+    <rect x="0" y="620" width="1600" height="280" fill="#4d0c17"/>
+    <line x1="0" y1="620" x2="1600" y2="620" stroke="#c9a227" stroke-width="6"/>
+  </g>
+  <g transform="translate(480 400)">
+    <circle r="24" fill="#e7d9a8"/>
+    <path d="M0 30 Q -30 160 -10 220 L-45 420 L-15 420 L10 240 L40 420 L70 420 L30 220 Q 50 140 20 30 Z" fill="#e7d9a8"/>
+    <line x1="-90" y1="40" x2="90" y2="40" stroke="#e7d9a8" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-90 40 Q -160 130 -90 220" stroke="#c9a227" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <line x1="-90" y1="40" x2="220" y2="40" stroke="#fdf9f0" stroke-width="5"/>
+    <polygon points="220,40 180,28 180,52" fill="#c9a227"/>
+  </g>
+  <g transform="translate(1120 380)">
+    <circle r="200" fill="#fdf9f0"/>
+    <circle r="160" fill="#b3261e"/>
+    <circle r="120" fill="#fdf9f0"/>
+    <circle r="80" fill="#b3261e"/>
+    <circle r="40" fill="#c9a227"/>
+  </g>
+  <text x="800" y="800" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#e7d9a8" letter-spacing="6">TRAIN LIKE A CHAMPION</text>
+  <text x="800" y="855" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#fdf9f0" opacity="0.8">Certified coaches · Safe range · All ages welcome</text>
+</svg>

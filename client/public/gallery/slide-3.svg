@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9a227"/>
+      <stop offset="1" stop-color="#8a1a2c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g fill="#4d0c17" opacity="0.85">
+    <circle cx="280" cy="300" r="70"/>
+    <path d="M280 380 Q 240 560 260 700 L200 860 L260 860 L300 620 L360 860 L420 860 L320 700 Q 340 520 300 380 Z"/>
+    <circle cx="800" cy="280" r="70"/>
+    <path d="M800 360 Q 760 540 780 680 L720 860 L790 860 L820 600 L880 860 L950 860 L840 680 Q 860 500 820 360 Z"/>
+    <circle cx="1320" cy="300" r="70"/>
+    <path d="M1320 380 Q 1280 560 1300 700 L1240 860 L1300 860 L1340 620 L1400 860 L1460 860 L1360 700 Q 1380 520 1340 380 Z"/>
+  </g>
+  <g stroke="#fdf9f0" stroke-width="10" stroke-linecap="round">
+    <line x1="380" y1="420" x2="520" y2="380"/>
+    <line x1="900" y1="400" x2="1040" y2="360"/>
+    <line x1="1420" y1="420" x2="1540" y2="380"/>
+  </g>
+  <text x="800" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="60" fill="#fdf9f0" letter-spacing="6">KIDS · YOUTH · ADULT</text>
+  <text x="800" y="200" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#4d0c17">Morning &amp; Evening batches · Friday, Saturday, Sunday</text>
+</svg>

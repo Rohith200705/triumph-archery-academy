@@ -24,13 +24,25 @@ const admissionSchema = new mongoose.Schema(
     },
     ageGroup: {
       type: String,
-      enum: ['', '6+ Years', 'Youth', 'Adult', 'All Levels'],
+      enum: [
+        '',
+        'Kid (6-12 years)',
+        'Youth (12-18 years)',
+        'Adult (18+ years)',
+        'Under 6',
+        '6+ Years',
+        'Youth',
+        'Adult',
+        'All Levels'
+      ],
       default: ''
     },
     weekendBatch: {
       type: String,
       enum: [
         '',
+        'Morning (Friday, Saturday, Sunday)',
+        'Evening (Friday, Saturday, Sunday)',
         'Saturday Morning',
         'Saturday Evening',
         'Sunday Morning',
@@ -50,6 +62,15 @@ const admissionSchema = new mongoose.Schema(
 
     declarationAgreed: { type: Boolean, default: false },
     signatureDate: { type: String, default: '' },
+
+    approvalStatus: {
+      type: String,
+      enum: ['Pending', 'Approved', 'Rejected'],
+      default: 'Pending'
+    },
+    approvalNote: { type: String, default: '' },
+    approvedAt: { type: Date, default: null },
+    approvedByName: { type: String, default: '' },
 
     whatsappNumber: { type: String, default: '', trim: true },
     status: { type: String, enum: ['Submitted', 'Sent to WhatsApp'], default: 'Submitted' },

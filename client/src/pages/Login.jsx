@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api, setSession } from '../api.js';
 
 export default function Login({ onLogin }) {
@@ -29,15 +30,17 @@ export default function Login({ onLogin }) {
     }
   }
 
+  const isParentSwitch = mode === 'login';
+
   return (
     <div className="auth">
       <form className="auth-card" onSubmit={submit}>
-        <h1>{mode === 'login' ? 'Official Login' : 'Register Official'}</h1>
+        <h1>{mode === 'login' ? 'Login' : 'Register Official'}</h1>
         <div className="tagline">Aim · Focus · Triumph</div>
         <div className="sub">
           {mode === 'login'
-            ? 'Sign in to manage admissions for Triumph Archery Academy.'
-            : 'Create an account for academy staff to register admissions.'}
+            ? 'Parents: use the email & password from your admission registration. Academy officials: sign in with your staff account.'
+            : 'Create an account for academy staff to manage admissions.'}
         </div>
 
         {error && <div className="alert err">{error}</div>}
@@ -57,7 +60,7 @@ export default function Login({ onLogin }) {
 
         <div className="field">
           <label>Email</label>
-          <input type="email" value={form.email} onChange={set('email')} placeholder="you@academy.in" required />
+          <input type="email" value={form.email} onChange={set('email')} placeholder="you@example.com" required />
         </div>
 
         <div className="field">
@@ -78,11 +81,13 @@ export default function Login({ onLogin }) {
         </button>
 
         <div className="auth-switch">
-          {mode === 'login' ? (
+          {isParentSwitch ? (
             <>
-              New to the portal?{' '}
+              New admission?{' '}
+              <Link to="/register">Register your ward here</Link>
+              {' · '}
               <button type="button" onClick={() => { setMode('register'); setError(''); }}>
-                Register here
+                Staff register
               </button>
             </>
           ) : (
@@ -93,6 +98,10 @@ export default function Login({ onLogin }) {
               </button>
             </>
           )}
+        </div>
+
+        <div className="auth-switch" style={{ marginTop: 10 }}>
+          <Link to="/">← Back to home</Link>
         </div>
       </form>
     </div>
