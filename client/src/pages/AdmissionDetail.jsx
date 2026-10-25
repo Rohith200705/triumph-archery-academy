@@ -334,12 +334,14 @@ export default function AdmissionDetail() {
             />
           </div>
           <div className="field">
-            <label>Score (optional)</label>
+            <label>Score (optional — present only)</label>
             <input
               type="number"
               value={sessForm.score}
               onChange={(e) => setSessForm({ ...sessForm, score: e.target.value })}
-              placeholder="e.g. 142"
+              placeholder={sessForm.attended ? 'e.g. 142' : 'No score when absent'}
+              disabled={!sessForm.attended}
+              style={!sessForm.attended ? { opacity: 0.55 } : undefined}
             />
           </div>
           <div className="field">
@@ -359,7 +361,7 @@ export default function AdmissionDetail() {
                   type="radio"
                   name="attended"
                   checked={sessForm.attended === false}
-                  onChange={() => setSessForm({ ...sessForm, attended: false })}
+                  onChange={() => setSessForm({ ...sessForm, attended: false, score: '' })}
                 />
                 Absent
               </label>

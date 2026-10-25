@@ -290,12 +290,17 @@ router.post('/:id/sessions', async (req, res) => {
     const { date, topic, attended, score, notes } = req.body || {};
     if (!date) return res.status(400).json({ message: 'Date is required' });
 
+    const isPresent = attended !== false;
     const session = await Session.create({
       admission: admission._id,
       date: new Date(date),
       topic: topic || '',
-      attended: attended !== false,
-      score: score === '' || score === null || score === undefined ? null : Number(score),
+      attended: isPresent,
+      score: !isPresent
+        ? null
+        : score === '' || score === null || score === undefined
+        ? null
+        : Number(score),
       notes: notes || '',
       createdBy: req.user._id,
       createdByName: req.user.name
